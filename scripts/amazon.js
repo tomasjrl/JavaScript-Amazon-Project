@@ -142,6 +142,18 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
       });
     }
 
-    console.log(cart);
+    // para calcular la cantidad  total de quantity usamos un loop for each con el parametro item y una funcion declarada
+    // creamos una variable cartQuantity para almacenar la cantidad total de quantity almacenada en parametro item
+    // usamos DOM para ponerlo en el html
+
+    let cartQuantity = 0;
+    cart.forEach((item) => {
+      cartQuantity += item.quantity;
+    });
+
+
+    // llamamos con querySelector a la etiqueta del html para poder usarla en javascript
+    // y le agregamos innerHTML para poder llevarla ya modificada de nuevo al html
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
   });
 });
