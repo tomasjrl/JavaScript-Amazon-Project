@@ -1,4 +1,9 @@
-// variable con un array de objectos
+
+// Toda la lista de productos esta en data/products.js
+// Queda mencionada la variable const products como ejemplo
+
+// variable con un array de objectos (EJEMPLO REDUCIDO)
+/*
 const products = [
   {
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -28,6 +33,8 @@ const products = [
     priceCents: 799,
   },
 ];
+*/
+
 
 // variable con string vacio 
 // para inyectar al html el resultado del loop products forEach
