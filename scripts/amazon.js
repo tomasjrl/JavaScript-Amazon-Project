@@ -1,4 +1,3 @@
-
 // Toda la lista de productos esta en data/products.js
 // Queda mencionada la variable const products como ejemplo
 
@@ -6,6 +5,7 @@
 /*
 const products = [
   {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
     name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
     rating: {
@@ -15,6 +15,7 @@ const products = [
     priceCents: 1090,
   },
   {
+    id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
     image: "images/products/intermediate-composite-basketball.jpg",
     name: "Intermediate Size Basketball",
     rating: {
@@ -24,6 +25,7 @@ const products = [
     priceCents: 2095,
   },
   {
+    id: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
     image: "images/products/adults-plain-cotton-tshirt-2-pack-teal.jpg",
     name: "Adults Plain Cotton T-Shirt - 2 Pack",
     rating: {
@@ -35,10 +37,9 @@ const products = [
 ];
 */
 
-
-// variable con string vacio 
+// variable con string vacio
 // para inyectar al html el resultado del loop products forEach
-let productsHTML = '';
+let productsHTML = "";
 
 // loop para recorrer la variable productos con forEach
 // por cada objeto lo guarda en un parametro llamado producto
@@ -46,9 +47,8 @@ let productsHTML = '';
 // la funcion genera todo el codigo html para luego insertarlo en productsHTML
 // $${(product.priceCents / 100).toFixed(2)} es para mostrar decimales en precio
 
-
 products.forEach((product) => {
-  productsHTML +=  `<div class="product-container">
+  productsHTML += `<div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
               src="${product.image}">
@@ -91,18 +91,57 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${
+            product.id
+          }">
             Add to Cart
           </button>
         </div>`;
 });
 
-// Usando el DOM traemos el class del html a javascript 
+// Usando el DOM traemos el class del html a javascript
 // con querySelector y la clase traemos la etiqueta html
-// con innerHTML inyectamos al html el resultado de la variable 
+// con innerHTML inyectamos al html el resultado de la variable
 
-document.querySelector('.js-products-grid').innerHTML = productsHTML;
+document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+// con querySelectorAll y la clase traemos todas las etiquetas (en cantidad) html generadas
+// se usa loop forEach para recorrer cada uno, un parametro button (coincide con etiqueta) y un escuchador de clicks para agregarles una funcion
+// escuchamos el click con addEventListener cuando lo realice el usuario en el boton
+// y le insertamos la funcion para cuando el click suceda
+// declarada una variable productId para facilitar el uso
+// se usa dataset para leer el data de la etiqueta button
+// se usa productId para leer el data-product-id=
+// agregamos cart.push para enviar a la variable cart del archivo cart.js el array con objetos
+// usamos un loop con forEach para chequear si la carta ya existe
+// le ponemos parametro item para que que contenga productId y quantity
+// se usa con productId en vez de productName por si hay nombres respetidos que son productos distintos
+// y le ejecutamos una funcion if para saber si ya existe un productId
+// creamos una variable matchingItem indefinida fuera del scope para poder usarla posteriormente
+// si ya existe el producto, se incrementa quantity +1
+// si no existe (else) carga el producto a cart
 
+document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+  button.addEventListener("click", () => {
+    const productId = button.dataset.productId;
 
+    let matchingItem;
 
+    cart.forEach((item) => {
+      if (productId === item.productId) {
+        matchingItem = item;
+      }
+    });
+
+    if (matchingItem) {
+      matchingItem.quantity += 1;
+    } else {
+      cart.push({
+        productId: productId,
+        quantity: 1,
+      });
+    }
+
+    console.log(cart);
+  });
+});
