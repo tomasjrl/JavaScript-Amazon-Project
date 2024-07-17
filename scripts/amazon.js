@@ -3,7 +3,7 @@
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
 // usando {cart as myCart} se puede re-declarar la variable si fuese necesario para no causar conflictos 
 import {cart} from '../data/cart.js';
-
+import {products} from '../data/products.js';
 
 // Toda la lista de productos esta en data/products.js
 // Queda mencionada la variable const products como ejemplo
