@@ -1,7 +1,13 @@
 /// export permite llevar la variable declarada fuera del archivo js
 /// y se aplica declarando type="module" en la etiqueta script del html
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
-export const cart = [];
+export const cart = [{
+  productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
+  quantity: 2,
+}, {
+  productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+  quantity: 1,
+}];
 
 // compilando funciones para mejor lectura y aplicandolos (llamandolos) luego en el codigo
 // se usa parametro productId para pasar el valor button.dataset.productId y llevarlo a la funcion
