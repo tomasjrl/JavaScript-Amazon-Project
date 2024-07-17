@@ -2,3 +2,33 @@
 /// y se aplica declarando type="module" en la etiqueta script del html
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
 export const cart = [];
+
+// compilando funciones para mejor lectura y aplicandolos (llamandolos) luego en el codigo
+// se usa parametro productId para pasar el valor button.dataset.productId y llevarlo a la funcion
+// agregamos cart.push para enviar a la variable cart del archivo cart.js el array con objetos
+// usamos un loop con forEach para chequear si la carta ya existe
+// le ponemos parametro item para que que contenga productId y quantity
+// se usa con productId en vez de productName por si hay nombres repetidos que son productos distintos
+// y le ejecutamos una funcion if para saber si ya existe un productId
+// creamos una variable matchingItem indefinida fuera del scope para poder usarla posteriormente
+// si ya existe el producto, se incrementa quantity +1
+// si no existe (else) carga el producto a cart
+
+export function addToCart(productId) {
+  let matchingItem;
+
+  cart.forEach((cartItem) => {
+    if (productId === cartItem.productId) {
+      matchingItem = cartItem;
+    }
+  });
+
+  if (matchingItem) {
+    matchingItem.quantity += 1;
+  } else {
+    cart.push({
+      productId: productId,
+      quantity: 1,
+    });
+  }
+}

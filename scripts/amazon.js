@@ -1,9 +1,10 @@
-// importo variable cart del archivo cart.js posterior a declarar type="module" este js en el html
+// importo la variable cart y la funcion addtoCart del archivo cart.js posterior a declarar type="module" este js en el html
 // se declara al comienzo del archivo
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
-// usando {cart as myCart} se puede re-declarar la variable si fuese necesario para no causar conflictos 
-import {cart} from '../data/cart.js';
-import {products} from '../data/products.js';
+// usando {cart as myCart} se puede re-declarar la variable si fuese necesario para no causar conflictos
+
+import { cart, addToCart } from "../data/cart.js";
+import { products } from "../data/products.js";
 
 // Toda la lista de productos esta en data/products.js
 // Queda mencionada la variable const products como ejemplo
@@ -46,6 +47,7 @@ const products = [
 
 // variable con string vacio
 // para inyectar al html el resultado del loop products forEach
+
 let productsHTML = "";
 
 // loop para recorrer la variable productos con forEach
@@ -112,6 +114,22 @@ products.forEach((product) => {
 
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+// para calcular la cantidad  total de quantity usamos un loop for each con el parametro item y una funcion declarada
+// creamos una variable cartQuantity para almacenar la cantidad total de quantity almacenada en parametro item
+// usamos DOM para ponerlo en el html
+
+function updateCartQuantity() {
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  // llamamos con querySelector a la etiqueta del html para poder usarla en javascript
+  // y le agregamos innerHTML para poder llevarla ya modificada de nuevo al html
+
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+}
+
 // con querySelectorAll y la clase traemos todas las etiquetas (en cantidad) html generadas
 // se usa loop forEach para recorrer cada uno, un parametro button (coincide con etiqueta) y un escuchador de clicks para agregarles una funcion
 // escuchamos el click con addEventListener cuando lo realice el usuario en el boton
@@ -119,48 +137,15 @@ document.querySelector(".js-products-grid").innerHTML = productsHTML;
 // declarada una variable productId para facilitar el uso
 // se usa dataset para leer el data de la etiqueta button
 // se usa productId para leer el data-product-id=
-// agregamos cart.push para enviar a la variable cart del archivo cart.js el array con objetos
-// usamos un loop con forEach para chequear si la carta ya existe
-// le ponemos parametro item para que que contenga productId y quantity
-// se usa con productId en vez de productName por si hay nombres respetidos que son productos distintos
-// y le ejecutamos una funcion if para saber si ya existe un productId
-// creamos una variable matchingItem indefinida fuera del scope para poder usarla posteriormente
-// si ya existe el producto, se incrementa quantity +1
-// si no existe (else) carga el producto a cart
 
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
 
-    let matchingItem;
+    // llamando a function addToCart
+    // se usa parametro productId para pasar el valor button.dataset.productId y llevarlo a la funcion
 
-    cart.forEach((item) => {
-      if (productId === item.productId) {
-        matchingItem = item;
-      }
-    });
-
-    if (matchingItem) {
-      matchingItem.quantity += 1;
-    } else {
-      cart.push({
-        productId: productId,
-        quantity: 1,
-      });
-    }
-
-    // para calcular la cantidad  total de quantity usamos un loop for each con el parametro item y una funcion declarada
-    // creamos una variable cartQuantity para almacenar la cantidad total de quantity almacenada en parametro item
-    // usamos DOM para ponerlo en el html
-
-    let cartQuantity = 0;
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-
-    // llamamos con querySelector a la etiqueta del html para poder usarla en javascript
-    // y le agregamos innerHTML para poder llevarla ya modificada de nuevo al html
-    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+    addToCart(productId);
+    updateCartQuantity();
   });
 });
