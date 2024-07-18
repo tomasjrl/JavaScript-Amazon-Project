@@ -5,6 +5,7 @@
 
 import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
+import { formatCurrency } from "./utils/money.js";
 
 // Toda la lista de productos esta en data/products.js
 // Queda mencionada la variable const products como ejemplo
@@ -75,7 +76,7 @@ products.forEach((product) => {
             </div>
           </div>
           <div class="product-price">
-            $${(product.priceCents / 100).toFixed(2)}
+            $${formatCurrency(product.priceCents)}
           </div>
 
           <div class="product-quantity-container">
