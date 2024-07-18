@@ -1,3 +1,4 @@
+
 // importo la variable cart del archivo cart.js posterior a declarar type="module" este js en el html
 // se declara al comienzo del archivo
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
@@ -8,6 +9,7 @@ import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
 // se crea una variable para almacenar el texto html que se genera en el loop
+
 let cartSummaryHTML = "";
 
 // creo una loop forEach para recorrer los objetos del array de la variable cart importada

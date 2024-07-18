@@ -1,3 +1,4 @@
+
 // importo la variable cart y la funcion addtoCart del archivo cart.js posterior a declarar type="module" este js en el html
 // se declara al comienzo del archivo
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
@@ -125,8 +126,8 @@ function updateCartQuantity() {
     cartQuantity += cartItem.quantity;
   });
 
-  // llamamos con querySelector a la etiqueta del html para poder usarla en javascript
-  // y le agregamos innerHTML para poder llevarla ya modificada de nuevo al html
+// llamamos con querySelector a la etiqueta del html para poder usarla en javascript
+// y le agregamos innerHTML para poder llevarla ya modificada de nuevo al html
 
   document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
 }
@@ -143,8 +144,8 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
 
-    // llamando a function addToCart
-    // se usa parametro productId para pasar el valor button.dataset.productId y llevarlo a la funcion
+// llamando a function addToCart
+// se usa parametro productId para pasar el valor button.dataset.productId y llevarlo a la funcion
 
     addToCart(productId);
     updateCartQuantity();
