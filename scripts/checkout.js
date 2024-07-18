@@ -26,7 +26,7 @@ cart.forEach((cartItem) => {
   });
 
   cartSummaryHTML += `
-  <div class="cart-item-container">
+  <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
           <div class="delivery-date">
             Delivery date: Tuesday, June 21
           </div>
@@ -108,10 +108,15 @@ document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
 // aplico un loop con forEach para cada para que sea removido al aplicar el boton remove
 // agrego addEventListener para escuchar el click en el boton remove desde el html
 // uso dataset que extrae la informacion de la etiqueta data del html (generado en javascript)
+// uso ` ` para llamar al id del producto de la clase js-cart-item-container
+// lo asigno a una variable const y lo elimino del html generado con la funcion .remove
 
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
     const productId = link.dataset.productId;
     removeFromCart(productId);
+
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    container.remove();
   })
 });
