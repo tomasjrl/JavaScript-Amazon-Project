@@ -3,16 +3,16 @@
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
 // usando {cart as myCart} se puede re-declarar la variable si fuese necesario para no causar conflictos
 
-import { cart } from "../data/cart.js";
+import { cart, removeFromCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
 // se crea una variable para almacenar el texto html que se genera en el loop
 let cartSummaryHTML = "";
 
-//creo una loop forEach para recorrer los objetos del array de la variable cart importada
-//usa parametro cartItem
-//copio el modelo html de etiquetas y contenido, que sera modificado con javascript y luego enviado de nuevo al html
+// creo una loop forEach para recorrer los objetos del array de la variable cart importada
+// usa parametro cartItem
+// copio el modelo html de etiquetas y contenido, que sera modificado con javascript y luego enviado de nuevo al html
 
 cart.forEach((cartItem) => {
   const productId = cartItem.productId;
@@ -50,7 +50,7 @@ cart.forEach((cartItem) => {
                 <span class="update-quantity-link link-primary">
                   Update
                 </span>
-                <span class="delete-quantity-link link-primary">
+                <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                   Delete
                 </span>
               </div>
@@ -99,6 +99,19 @@ cart.forEach((cartItem) => {
   `;
 });
 
-//llamo a la clase order-summary del html con querySelector
+// llamo a la clase js-order-summary del html con querySelector
 // y le agrego el contenido de cartSummaryHTML con innerHTML
+
 document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
+
+// llamo a la clase js-delete-link' del html con querySelectorAll
+// aplico un loop con forEach para cada para que sea removido al aplicar el boton remove
+// agrego addEventListener para escuchar el click en el boton remove desde el html
+// uso dataset que extrae la informacion de la etiqueta data del html (generado en javascript)
+
+document.querySelectorAll('.js-delete-link').forEach((link) => {
+  link.addEventListener('click', () => {
+    const productId = link.dataset.productId;
+    removeFromCart(productId);
+  })
+});

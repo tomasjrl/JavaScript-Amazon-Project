@@ -1,13 +1,16 @@
-/// export permite llevar la variable declarada fuera del archivo js
-/// y se aplica declarando type="module" en la etiqueta script del html
+// export permite llevar la variable declarada fuera del archivo js
+// y se aplica declarando type="module" en la etiqueta script del html
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
-export const cart = [{
-  productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
-  quantity: 2,
-}, {
-  productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
-  quantity: 1,
-}];
+export let cart = [
+  {
+    productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+    quantity: 2,
+  },
+  {
+    productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+    quantity: 1,
+  },
+];
 
 // compilando funciones para mejor lectura y aplicandolos (llamandolos) luego en el codigo
 // se usa parametro productId para pasar el valor button.dataset.productId y llevarlo a la funcion
@@ -37,4 +40,22 @@ export function addToCart(productId) {
       quantity: 1,
     });
   }
+}
+
+// creo funcion para remover un producto de checkout al apretar boton remove
+// se crea un nuevo array con todos los productos menos los eliminados
+// el loop contendra toda la lista de productos que NO coincidan con el productId (que son los eliminados)
+// y creara un nuevo array con solo los productos restantes
+// export la funcion para aplicarla en checkout.js
+
+export function removeFromCart(productId) {
+  const newCart = [];
+
+  cart.forEach((cartItem) => {
+    if (cartItem.productId !== productId) {
+      newCart.push(cartItem);
+    }
+  });
+
+  cart = newCart;
 }
