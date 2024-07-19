@@ -3,7 +3,7 @@
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
 // usando {cart as myCart} se puede re-declarar la variable si fuese necesario para no causar conflictos
 
-import { cart, removeFromCart } from "../data/cart.js";
+import { cart, removeFromCart, updateDeliveryOption } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
@@ -129,7 +129,8 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
 
     const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
-    html += ` <div class="delivery-option">
+    html += ` 
+    <div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${deliveryOption.id}">
                 <input type="radio" ${
                   isChecked ? "checked" : ""
                 } class="delivery-option-input" name="${matchingProduct.id}">
@@ -167,5 +168,14 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
       `.js-cart-item-container-${productId}`
     );
     container.remove();
+  });
+});
+
+// llamo a la clase delivery-option y aplico loop para mantener la opcion elegida mas alla de refrescar la pagina en checkout
+
+document.querySelectorAll(".js-delivery-option").forEach((element) => {
+  element.addEventListener("click", () => {
+    const {productId, deliveryOptionId} = element.dataset;
+    updateDeliveryOption(productId, deliveryOptionId);
   });
 });
