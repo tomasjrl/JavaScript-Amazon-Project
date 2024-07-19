@@ -21,48 +21,51 @@ const today = dayjs();
 const deliveryDate = today.add(7, "days");
 console.log(deliveryDate.format("dddd, MMMM D"));
 
-// se crea una variable para almacenar el texto html que se genera en el loop
+// se genera una funcion para su reutilizacion posterior
 
-let cartSummaryHTML = "";
+function renderOrdersummary() {
+  // se crea una variable para almacenar el texto html que se genera en el loop
 
-// creo una loop forEach para recorrer los objetos del array de la variable cart importada
-// usa parametro cartItem
-// copio el modelo html de etiquetas y contenido, que sera modificado con javascript y luego enviado de nuevo al html
+  let cartSummaryHTML = "";
 
-cart.forEach((cartItem) => {
-  const productId = cartItem.productId;
+  // creo una loop forEach para recorrer los objetos del array de la variable cart importada
+  // usa parametro cartItem
+  // copio el modelo html de etiquetas y contenido, que sera modificado con javascript y luego enviado de nuevo al html
 
-  let matchingProduct;
+  cart.forEach((cartItem) => {
+    const productId = cartItem.productId;
 
-  products.forEach((product) => {
-    if (product.id === productId) {
-      matchingProduct = product;
-    }
-  });
+    let matchingProduct;
 
-  // pone en una variable el valor obtenido de cartItem
+    products.forEach((product) => {
+      if (product.id === productId) {
+        matchingProduct = product;
+      }
+    });
 
-  const deliveryOptionId = cartItem.deliveryOptionId;
+    // pone en una variable el valor obtenido de cartItem
 
-  // crea un loop forEach para recorrer deliveryOptions
-  // le da el parametro option que representa a cada uno de los resultados
-  // dayjs() es segun la documentacion de la libreria importada para calcular dias
-  // today.add es segun la documentacion de la libreria importada para calcular dias
-  // deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
+    const deliveryOptionId = cartItem.deliveryOptionId;
 
-  let deliveryOption;
+    // crea un loop forEach para recorrer deliveryOptions
+    // le da el parametro option que representa a cada uno de los resultados
+    // dayjs() es segun la documentacion de la libreria importada para calcular dias
+    // today.add es segun la documentacion de la libreria importada para calcular dias
+    // deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
 
-  deliveryOptions.forEach((option) => {
-    if (option.id === deliveryOptionId) {
-      deliveryOption = option;
-    }
-  });
+    let deliveryOption;
 
-  const today = dayjs();
-  const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-  const dateString = deliveryDate.format("ddd, MMMM, D");
+    deliveryOptions.forEach((option) => {
+      if (option.id === deliveryOptionId) {
+        deliveryOption = option;
+      }
+    });
 
-  cartSummaryHTML += `
+    const today = dayjs();
+    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    const dateString = deliveryDate.format("ddd, MMMM, D");
+
+    cartSummaryHTML += `
   <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
           <div class="delivery-date">
             Delivery date: ${dateString}
@@ -104,33 +107,35 @@ cart.forEach((cartItem) => {
           </div>
         </div>
   `;
-});
+  });
 
-// creamos funcion para recorrer en loop cada producto y generar le HTML con la opcion elegida para checkout
-// segun cantidad de dias a elegir hay recargo en cada producto
-// nombramos al parametro deliveryOption por representa a cada producto
-// dayjs() es segun la documentacion de la libreria importada para calcular dias
-// today.add es segun la documentacion de la libreria importada para calcular dias
-// deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
-// const xxx  === 0 ? : (forma abreviada de decir que: SI 0 es TRUE entonces (? = ...) y si no lo es entonces (: = ...)) y puede guardarse en una variable
-// isChecked es para que la opcion FREE sea chequeada (checked) por defecto si el producto existe
+  // creamos funcion para recorrer en loop cada producto y generar le HTML con la opcion elegida para checkout
+  // segun cantidad de dias a elegir hay recargo en cada producto
+  // nombramos al parametro deliveryOption por representa a cada producto
+  // dayjs() es segun la documentacion de la libreria importada para calcular dias
+  // today.add es segun la documentacion de la libreria importada para calcular dias
+  // deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
+  // const xxx  === 0 ? : (forma abreviada de decir que: SI 0 es TRUE entonces (? = ...) y si no lo es entonces (: = ...)) y puede guardarse en una variable
+  // isChecked es para que la opcion FREE sea chequeada (checked) por defecto si el producto existe
 
-function deliveryOptionsHTML(matchingProduct, cartItem) {
-  let html = "";
+  function deliveryOptionsHTML(matchingProduct, cartItem) {
+    let html = "";
 
-  deliveryOptions.forEach((deliveryOption) => {
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-    const dateString = deliveryDate.format("ddd, MMMM, D");
-    const priceString =
-      deliveryOption.priceCents === 0
-        ? "FREE"
-        : `$${formatCurrency(deliveryOption.priceCents)} -`;
+    deliveryOptions.forEach((deliveryOption) => {
+      const today = dayjs();
+      const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+      const dateString = deliveryDate.format("ddd, MMMM, D");
+      const priceString =
+        deliveryOption.priceCents === 0
+          ? "FREE"
+          : `$${formatCurrency(deliveryOption.priceCents)} -`;
 
-    const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+      const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
-    html += ` 
-    <div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${deliveryOption.id}">
+      html += ` 
+    <div class="delivery-option js-delivery-option" data-product-id="${
+      matchingProduct.id
+    }" data-delivery-option-id="${deliveryOption.id}">
                 <input type="radio" ${
                   isChecked ? "checked" : ""
                 } class="delivery-option-input" name="${matchingProduct.id}">
@@ -143,39 +148,47 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
                   </div>
                 </div>
               </div>`;
+    });
+    return html;
+  }
+
+  // llamo a la clase js-order-summary del html con querySelector
+  // y le agrego el contenido de cartSummaryHTML con innerHTML
+
+  document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
+
+  // llamo a la clase js-delete-link' del html con querySelectorAll
+  // aplico un loop con forEach para cada para que sea removido al aplicar el boton remove
+  // agrego addEventListener para escuchar el click en el boton remove desde el html
+  // uso dataset que extrae la informacion de la etiqueta data del html (generado en javascript)
+  // uso ` ` para llamar al id del producto de la clase js-cart-item-container
+  // lo asigno a una variable const y lo elimino del html generado con la funcion .remove
+
+  document.querySelectorAll(".js-delete-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      const productId = link.dataset.productId;
+      removeFromCart(productId);
+
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      );
+      container.remove();
+    });
   });
-  return html;
+
+  // llamo a la clase delivery-option y aplico loop para mantener la opcion elegida mas alla de refrescar la pagina en checkout
+
+  document.querySelectorAll(".js-delivery-option").forEach((element) => {
+    element.addEventListener("click", () => {
+      const { productId, deliveryOptionId } = element.dataset;
+      updateDeliveryOption(productId, deliveryOptionId);
+
+      // recursion = la funcion puede volver a llamarse a si misma para ejecutarse
+      renderOrdersummary();
+    });
+  });
 }
 
-// llamo a la clase js-order-summary del html con querySelector
-// y le agrego el contenido de cartSummaryHTML con innerHTML
+//corre la funcion que actualiza la data y regenera el html instantaneamente con fechas asignadas
 
-document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
-
-// llamo a la clase js-delete-link' del html con querySelectorAll
-// aplico un loop con forEach para cada para que sea removido al aplicar el boton remove
-// agrego addEventListener para escuchar el click en el boton remove desde el html
-// uso dataset que extrae la informacion de la etiqueta data del html (generado en javascript)
-// uso ` ` para llamar al id del producto de la clase js-cart-item-container
-// lo asigno a una variable const y lo elimino del html generado con la funcion .remove
-
-document.querySelectorAll(".js-delete-link").forEach((link) => {
-  link.addEventListener("click", () => {
-    const productId = link.dataset.productId;
-    removeFromCart(productId);
-
-    const container = document.querySelector(
-      `.js-cart-item-container-${productId}`
-    );
-    container.remove();
-  });
-});
-
-// llamo a la clase delivery-option y aplico loop para mantener la opcion elegida mas alla de refrescar la pagina en checkout
-
-document.querySelectorAll(".js-delivery-option").forEach((element) => {
-  element.addEventListener("click", () => {
-    const {productId, deliveryOptionId} = element.dataset;
-    updateDeliveryOption(productId, deliveryOptionId);
-  });
-});
+renderOrdersummary();
