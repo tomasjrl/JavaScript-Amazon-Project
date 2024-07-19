@@ -1,4 +1,3 @@
-
 // importo la variable cart del archivo cart.js posterior a declarar type="module" este js en el html
 // se declara al comienzo del archivo
 // los modules declarados para probarlos funcionan solo con live-server (y no abriendo el archivo desde el explorador)
@@ -7,6 +6,20 @@
 import { cart, removeFromCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
+
+// importo libreria externa de javascript ESM para usar en el codigo (calendario)
+// se usa/emplea segun documentacion de la libreria
+// sin {} se denomina como un import de un default export y puede haber 1 (default export) por archivo
+// const y console log a modo de ejemplo
+
+import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
+
+// importo las opciones de recargo de precios en los productos por el envio en cantidad de dias
+import { deliveryOptions } from "../data/deliveryOptions.js";
+
+const today = dayjs();
+const deliveryDate = today.add(7, "days");
+console.log(deliveryDate.format("dddd, MMMM D"));
 
 // se crea una variable para almacenar el texto html que se genera en el loop
 
@@ -27,10 +40,32 @@ cart.forEach((cartItem) => {
     }
   });
 
+  // pone en una variable el valor obtenido de cartItem
+
+  const deliveryOptionId = cartItem.deliveryOptionId;
+
+  // crea un loop forEach para recorrer deliveryOptions
+  // le da el parametro option que representa a cada uno de los resultados
+  // dayjs() es segun la documentacion de la libreria importada para calcular dias
+  // today.add es segun la documentacion de la libreria importada para calcular dias
+  // deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
+
+  let deliveryOption;
+
+  deliveryOptions.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option;
+    }
+  });
+
+  const today = dayjs();
+  const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+  const dateString = deliveryDate.format("ddd, MMMM, D");
+
   cartSummaryHTML += `
   <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
           <div class="delivery-date">
-            Delivery date: Tuesday, June 21
+            Delivery date: ${dateString}
           </div>
 
           <div class="cart-item-details-grid">
@@ -52,7 +87,9 @@ cart.forEach((cartItem) => {
                 <span class="update-quantity-link link-primary">
                   Update
                 </span>
-                <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
+                <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${
+                  matchingProduct.id
+                }">
                   Delete
                 </span>
               </div>
@@ -62,44 +99,52 @@ cart.forEach((cartItem) => {
               <div class="delivery-options-title">
                 Choose a delivery option:
               </div>
-              <div class="delivery-option">
-                <input type="radio" checked class="delivery-option-input" name="${matchingProduct.id}">
-                <div>
-                  <div class="delivery-option-date">
-                    Tuesday, June 21
-                  </div>
-                  <div class="delivery-option-price">
-                    FREE Shipping
-                  </div>
-                </div>
-              </div>
-              <div class="delivery-option">
-                <input type="radio" class="delivery-option-input" name="${matchingProduct.id}">
-                <div>
-                  <div class="delivery-option-date">
-                    Wednesday, June 15
-                  </div>
-                  <div class="delivery-option-price">
-                    $4.99 - Shipping
-                  </div>
-                </div>
-              </div>
-              <div class="delivery-option">
-                <input type="radio" class="delivery-option-input" name="${matchingProduct.id}">
-                <div>
-                  <div class="delivery-option-date">
-                    Monday, June 13
-                  </div>
-                  <div class="delivery-option-price">
-                    $9.99 - Shipping
-                  </div>
-                </div>
-              </div>
+            ${deliveryOptionsHTML(matchingProduct, cartItem)}
             </div>
           </div>
         </div>
   `;
 });
+
+// creamos funcion para recorrer en loop cada producto y generar le HTML con la opcion elegida para checkout
+// segun cantidad de dias a elegir hay recargo en cada producto
+// nombramos al parametro deliveryOption por representa a cada producto
+// dayjs() es segun la documentacion de la libreria importada para calcular dias
+// today.add es segun la documentacion de la libreria importada para calcular dias
+// deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
+// const xxx  === 0 ? : (forma abreviada de decir que: SI 0 es TRUE entonces (? = ...) y si no lo es entonces (: = ...)) y puede guardarse en una variable
+// isChecked es para que la opcion FREE sea chequeada (checked) por defecto si el producto existe
+
+function deliveryOptionsHTML(matchingProduct, cartItem) {
+  let html = "";
+
+  deliveryOptions.forEach((deliveryOption) => {
+    const today = dayjs();
+    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    const dateString = deliveryDate.format("ddd, MMMM, D");
+    const priceString =
+      deliveryOption.priceCents === 0
+        ? "FREE"
+        : `$${formatCurrency(deliveryOption.priceCents)} -`;
+
+    const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+
+    html += ` <div class="delivery-option">
+                <input type="radio" ${
+                  isChecked ? "checked" : ""
+                } class="delivery-option-input" name="${matchingProduct.id}">
+                <div>
+                  <div class="delivery-option-date">
+                    ${dateString}
+                  </div>
+                  <div class="delivery-option-price">
+                    ${priceString} Shipping
+                  </div>
+                </div>
+              </div>`;
+  });
+  return html;
+}
 
 // llamo a la clase js-order-summary del html con querySelector
 // y le agrego el contenido de cartSummaryHTML con innerHTML
@@ -113,12 +158,14 @@ document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
 // uso ` ` para llamar al id del producto de la clase js-cart-item-container
 // lo asigno a una variable const y lo elimino del html generado con la funcion .remove
 
-document.querySelectorAll('.js-delete-link').forEach((link) => {
-  link.addEventListener('click', () => {
+document.querySelectorAll(".js-delete-link").forEach((link) => {
+  link.addEventListener("click", () => {
     const productId = link.dataset.productId;
     removeFromCart(productId);
 
-    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    const container = document.querySelector(
+      `.js-cart-item-container-${productId}`
+    );
     container.remove();
-  })
+  });
 });
