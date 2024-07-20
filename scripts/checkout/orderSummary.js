@@ -16,10 +16,7 @@ import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 
 // importo las opciones de recargo de precios en los productos por el envio en cantidad de dias
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
-
-const today = dayjs();
-const deliveryDate = today.add(7, "days");
-console.log(deliveryDate.format("dddd, MMMM D"));
+import {renderPaymentSummary} from "./paymentSummary.js"
 
 // se genera una funcion para su reutilizacion posterior
 
@@ -162,6 +159,8 @@ export function renderOrderSummary() {
         `.js-cart-item-container-${productId}`
       );
       container.remove();
+
+      renderPaymentSummary();
     });
   });
 
@@ -178,6 +177,7 @@ export function renderOrderSummary() {
       // 2) view que toma la data y la muestra en la pagina regenerando el html
       // 3) controller corre el codigo cuando se interactua con la pagina
       renderOrderSummary();
+      renderPaymentSummary();
     });
   });
 }
