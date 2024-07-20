@@ -4,7 +4,7 @@
 // usando {cart as myCart} se puede re-declarar la variable si fuese necesario para no causar conflictos
 
 import { cart, removeFromCart, updateDeliveryOption } from "../../data/cart.js";
-import { products } from "../../data/products.js";
+import { products, getProduct } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 
 // importo libreria externa de javascript ESM para usar en el codigo (calendario)
@@ -15,7 +15,7 @@ import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 
 // importo las opciones de recargo de precios en los productos por el envio en cantidad de dias
-import { deliveryOptions } from "../../data/deliveryOptions.js";
+import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
 
 const today = dayjs();
 const deliveryDate = today.add(7, "days");
@@ -35,13 +35,7 @@ export function renderOrderSummary() {
   cart.forEach((cartItem) => {
     const productId = cartItem.productId;
 
-    let matchingProduct;
-
-    products.forEach((product) => {
-      if (product.id === productId) {
-        matchingProduct = product;
-      }
-    });
+    const matchingProduct = getProduct(productId);
 
     // pone en una variable el valor obtenido de cartItem
 
@@ -52,14 +46,9 @@ export function renderOrderSummary() {
     // dayjs() es segun la documentacion de la libreria importada para calcular dias
     // today.add es segun la documentacion de la libreria importada para calcular dias
     // deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
-
-    let deliveryOption;
-
-    deliveryOptions.forEach((option) => {
-      if (option.id === deliveryOptionId) {
-        deliveryOption = option;
-      }
-    });
+    // ejecuto la funcion que contiene el loop
+    
+    const deliveryOption = getDeliveryOption(deliveryOptionId);
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");

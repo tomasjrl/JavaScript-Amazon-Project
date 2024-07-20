@@ -3,5 +3,7 @@
 // exportamos la funcion para aplicarlo en otros archivos js
 
 export function formatCurrency(priceCents) {
-  return (priceCents / 100).toFixed(2);
+  return (Math.round(priceCents) / 100).toFixed(2);
 }
+
+export default formatCurrency;
