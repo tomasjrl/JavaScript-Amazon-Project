@@ -11,12 +11,15 @@ import { formatCurrency } from "../utils/money.js";
 // se usa/emplea segun documentacion de la libreria
 // sin {} se denomina como un import de un default export y puede haber 1 (default export) por archivo
 // const y console log a modo de ejemplo
-
+import { hello } from "https://unpkg.com/supersimpledev@1.0.1/hello.esm.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 
 // importo las opciones de recargo de precios en los productos por el envio en cantidad de dias
-import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
-import {renderPaymentSummary} from "./paymentSummary.js"
+import {
+  deliveryOptions,
+  getDeliveryOption,
+} from "../../data/deliveryOptions.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 // se genera una funcion para su reutilizacion posterior
 
@@ -44,55 +47,57 @@ export function renderOrderSummary() {
     // today.add es segun la documentacion de la libreria importada para calcular dias
     // deliveryDate.format('ddd, MMMM, D'); es segun la documentacion de la libreria importada para calcular dias
     // ejecuto la funcion que contiene el loop
-    
+
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-    const dateString = deliveryDate.format("ddd, MMMM, D");
+    const dateString = deliveryDate.format("dddd, MMMM D");
 
     cartSummaryHTML += `
-  <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
-          <div class="delivery-date">
-            Delivery date: ${dateString}
+      <div class="cart-item-container
+        js-cart-item-container
+        js-cart-item-container-${matchingProduct.id}">
+        <div class="delivery-date">
+          Delivery date: ${dateString}
+        </div>
+
+        <div class="cart-item-details-grid">
+          <img class="product-image"
+            src="${matchingProduct.image}">
+
+          <div class="cart-item-details">
+            <div class="product-name">
+              ${matchingProduct.name}
+            </div>
+            <div class="product-price">
+              $${formatCurrency(matchingProduct.priceCents)}
+            </div>
+            <div class="product-quantity
+              js-product-quantity-${matchingProduct.id}">
+              <span>
+                Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+              </span>
+              <span class="update-quantity-link link-primary">
+                Update
+              </span>
+              <span class="delete-quantity-link link-primary js-delete-link
+                js-delete-link-${matchingProduct.id}"
+                data-product-id="${matchingProduct.id}">
+                Delete
+              </span>
+            </div>
           </div>
 
-          <div class="cart-item-details-grid">
-            <img class="product-image" src="${matchingProduct.image}">
-
-            <div class="cart-item-details">
-              <div class="product-name">
-              ${matchingProduct.name}
-              </div>
-              <div class="product-price">
-                ${matchingProduct.getPrice()}
-              </div>
-              <div class="product-quantity">
-                <span>
-                  Quantity: <span class="quantity-label">${
-                    cartItem.quantity
-                  }</span>
-                </span>
-                <span class="update-quantity-link link-primary">
-                  Update
-                </span>
-                <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${
-                  matchingProduct.id
-                }">
-                  Delete
-                </span>
-              </div>
+          <div class="delivery-options">
+            <div class="delivery-options-title">
+              Choose a delivery option:
             </div>
-
-            <div class="delivery-options">
-              <div class="delivery-options-title">
-                Choose a delivery option:
-              </div>
             ${deliveryOptionsHTML(matchingProduct, cartItem)}
-            </div>
           </div>
         </div>
-  `;
+      </div>
+    `;
   });
 
   // creamos funcion para recorrer en loop cada producto y generar le HTML con la opcion elegida para checkout
