@@ -2,7 +2,7 @@
 
 import { renderOrderSummary } from "./checkout/orderSummary.js";
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
-import '../data/cart-class.js';
+// import '../data/cart-class.js';
 
 //corre la funcion que actualiza la data y regenera el html instantaneamente con fechas asignadas
 // tecnica MVC = model view controller que interactuan en orden con un loop
