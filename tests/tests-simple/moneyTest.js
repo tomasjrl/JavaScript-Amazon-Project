@@ -1,6 +1,6 @@
 // importando funcion de archivo money.js para testeos
 
-import {formatCurrency} from '../scripts/utils/money.js';
+import {formatCurrency} from '../../scripts/utils/money.js';
 
 //a la variable se le da un parametro de 2095 para probar
 // y se testea con un loop if
