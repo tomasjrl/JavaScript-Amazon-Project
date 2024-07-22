@@ -6,7 +6,12 @@
 // uso JSON.parse para reconvertir en un array el string guardado previamente con JSON.stringify 
 // si cart esta vacio de contenido (!cart) le dara un valor determinado 
 
-export let cart = JSON.parse(localStorage.getItem('cart'));
+export let cart;
+
+loadFromStorage();
+
+export function loadFromStorage(){
+  cart = JSON.parse(localStorage.getItem('cart'));
 
 if (!cart) {
  cart = [
@@ -22,6 +27,7 @@ if (!cart) {
   },
 ];
 }
+};
 
 // creamos funcion para guardar info localstorage
 // al refrescar la pagina se debe mantener los cambios realizados

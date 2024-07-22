@@ -1,6 +1,6 @@
 // importando funcion de archivo money.js para testeos
 
-import { formatCurrency } from "../scripts/utils/money.js";
+import { formatCurrency } from "../../scripts/utils/money.js";
 
 // funcion describe y expect provista por el framework jasmine
 
